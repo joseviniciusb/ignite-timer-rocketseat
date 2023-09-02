@@ -1,16 +1,9 @@
-import styled , {css} from "styled-components";
+import styled from "styled-components";
 
 export type buttonVariant = "primary" | "secondary" | "danger" | "success";
 
 interface ButtonContainerProps {
     variant: buttonVariant ;
-}
-
-const buttonVariants = {
-    primary: "purple",
-    secondary: "orange",
-    danger: "red",
-    success: "green"
 }
 
 export const ButtonContainer = styled.button<ButtonContainerProps>`
