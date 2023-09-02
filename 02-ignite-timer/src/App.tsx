@@ -8,13 +8,15 @@ function App() {
   const [count] = useState(5);
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+      <ThemeProvider theme={defaultTheme}>
       <h1> {count}</h1>
       <Button variant="primary"/>
       <Button variant="secondary"/>
       <Button variant="danger" />
       <Button variant="success"/>
-    </ThemeProvider>
+  
+      </ThemeProvider>
+      
   );
 }
 
