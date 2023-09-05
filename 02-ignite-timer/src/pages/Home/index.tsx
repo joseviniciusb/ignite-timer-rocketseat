@@ -37,7 +37,7 @@ interface Cycle {
 const Home = () => {
   const [cycles, setCycles] = useState<Cycle[]>([]);
   const [activeCycleId, setActiveCycleId] = useState<string | null>(null);
-  const [amountSecondsPast, setAmountSecondsPast] = useState(0);
+  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0);
 
   const { register, handleSubmit, watch, reset } = useForm<NewCycleFormData>({
     resolver: zodResolver(newCycleFormValidationSchema),
@@ -52,13 +52,19 @@ const Home = () => {
   });
 
   useEffect(() => {
+    let interval: number;
+
     if (activeCycle) {
-      setInterval(() => {
-        setAmountSecondsPast(
+      interval = setInterval(() => {
+        setAmountSecondsPassed(
           differenceInSeconds(new Date(), activeCycle.startDate)
         );
       }, 1000);
     }
+
+    return () => {
+      clearInterval(interval);
+    };
   }, [activeCycle]);
 
   const handleCreateNewCycle = (data: NewCycleFormData) => {
@@ -69,6 +75,7 @@ const Home = () => {
       startDate: new Date(),
     };
 
+    setAmountSecondsPassed(0);
     setCycles((state) => [...state, newCycle]);
     setActiveCycleId(newCycle.id);
 
@@ -76,15 +83,13 @@ const Home = () => {
   };
 
   const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0;
-  const currentSeconds = activeCycle ? totalSeconds - amountSecondsPast : 0;
+  const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0;
 
-  const minutesAmount = Math.floor(totalSeconds / 60);
+  const minutesAmount = Math.floor(currentSeconds / 60);
   const secondsAmount = currentSeconds % 60;
 
   const minutes = String(minutesAmount).padStart(2, "0");
   const seconds = String(secondsAmount).padStart(2, "0");
-
-  console.log(activeCycle);
 
   const task = watch("task");
   const isSubmitDisable = !task;
