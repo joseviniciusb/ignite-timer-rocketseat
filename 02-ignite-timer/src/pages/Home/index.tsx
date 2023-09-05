@@ -33,6 +33,7 @@ interface Cycle {
   task: string;
   minutesAmount: number;
   startDate: Date;
+  interruptedDate?: Date;
 }
 
 const Home = () => {
@@ -81,6 +82,20 @@ const Home = () => {
     setActiveCycleId(newCycle.id);
 
     reset();
+  };
+
+  const handleInterruptCycle = () => {
+    setCycles(
+      cycles.map((cycle) => {
+        if (cycle.id === activeCycleId) {
+          return { ...cycle, interruptedDate: new Date() };
+        } else {
+          return cycle;
+        }
+      })
+    );
+
+    setActiveCycleId(null);
   };
 
   const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0;
@@ -140,7 +155,10 @@ const Home = () => {
         </CountdownContainer>
 
         {activeCycle ? (
-          <StopCountdownButton disabled={isSubmitDisable} type="button">
+          <StopCountdownButton
+            onClick={handleInterruptCycle}
+            type="button"
+          >
             <HandPalm size={24} />
             Interromper
           </StopCountdownButton>
